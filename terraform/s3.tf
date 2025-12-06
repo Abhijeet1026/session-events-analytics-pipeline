@@ -6,10 +6,10 @@
 resource "aws_s3_bucket" "lakehouse" {
   # Bucket name must be globally unique across ALL AWS accounts,
   # so we combine project name + environment to reduce conflicts.
-  bucket = "${var.project_name}-${var.environment}-glue-bucket"
+  bucket = "${var.project_name}-${var.environment}-data-ingestion"
 
   tags = {
-    Name = "${var.project_name}-lakehouse"
+    Name = "bucket = "${var.project_name}-${var.environment}-data-ingestion"
   }
 
 }
