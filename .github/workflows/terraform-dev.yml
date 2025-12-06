@@ -44,3 +44,10 @@ jobs:
       # 5. Run Terraform Plan for the dev environment
       - name: Terraform Plan (dev)
         run: terraform plan -var-file="environments/dev.tfvars"
+
+      # Apply ONLY when:
+      # - branch is main
+      # - AND workflow is triggered manually from Actions tab
+      - name: Terraform Apply (dev)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
+        run: terraform apply -auto-approve -var-file="environments/dev.tfvars"
