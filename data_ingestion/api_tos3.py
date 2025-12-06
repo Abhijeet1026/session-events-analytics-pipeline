@@ -3,6 +3,7 @@ import json
 from datetime import datetime, timezone
 
 import boto3
+
 from awsglue.utils import getResolvedOptions
 
 # Glue job arguments: we pass these from the console
