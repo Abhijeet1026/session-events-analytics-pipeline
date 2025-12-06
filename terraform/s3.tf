@@ -9,9 +9,9 @@ resource "aws_s3_bucket" "lakehouse" {
   bucket = "${var.project_name}-${var.environment}-data-ingestion"
 
   tags = {
-    Name = "bucket = "${var.project_name}-${var.environment}-data-ingestion"
+    # Simple Name tag, no extra "bucket =" text here
+    Name = "${var.project_name}-data-ingestion"
   }
-
 }
 
 # Enable versioning for data protection
@@ -24,7 +24,6 @@ resource "aws_s3_bucket_versioning" "lakehouse" {
 }
 
 # Block all public access
-
 resource "aws_s3_bucket_public_access_block" "lakehouse" {
   # Link this config to the bucket defined above
   bucket = aws_s3_bucket.lakehouse.id
