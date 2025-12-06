@@ -1,0 +1,46 @@
+name: Terraform Dev Deploy
+
+on:
+  push:
+    branches:
+      - main              # change to your branch name if needed (e.g. dev)
+    paths:
+      - 'terraform/**'    # only run when files under terraform/ change
+
+  workflow_dispatch:       # allow manual run from Actions tab
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    # All commands run from the terraform folder
+    defaults:
+      run:
+        working-directory: terraform
+
+    steps:
+      # 1. Checkout repo code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Install Terraform
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.5
+
+      # 3. Configure AWS credentials (from GitHub Secrets)
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # 4. Initialize Terraform in the terraform/ directory
+      - name: Terraform Init
+        run: terraform init
+
+      # 5. Run Terraform Plan for the dev environment
+      - name: Terraform Plan (dev)
+        run: terraform plan -var-file="environments/dev.tfvars"
