@@ -1,13 +1,19 @@
 name: Terraform Dev Deploy
 
 on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "terraform/**"
+
   push:
     branches:
-      - main              # change to your branch name if needed (e.g. dev)
+      - main
     paths:
-      - 'terraform/**'    # only run when files under terraform/ change
+      - "terraform/**"
 
-  workflow_dispatch:       # allow manual run from Actions tab
+  workflow_dispatch:
 
 jobs:
   terraform:
@@ -19,17 +25,17 @@ jobs:
         working-directory: terraform
 
     steps:
-      # 1. Checkout repo code
+      # 1) Checkout repo code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Install Terraform
+      # 2) Install Terraform
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.9.5
 
-      # 3. Configure AWS credentials (from GitHub Secrets)
+      # 3) Configure AWS credentials (from GitHub Secrets)
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -37,17 +43,22 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # 4. Initialize Terraform in the terraform/ directory
+      # 4) Terraform Init (use remote backend in backend.tf)
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -reconfigure -input=false
 
-      # 5. Run Terraform Plan for the dev environment
+      # 5) Terraform Format + Validate
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      # 6) Terraform Plan (runs on PRs + pushes)
       - name: Terraform Plan (dev)
-        run: terraform plan -var-file="environments/dev.tfvars"
+        run: terraform plan -input=false -var-file="environments/dev.tfvars"
 
-      # Apply ONLY when:
-      # - branch is main
-      # - AND workflow is triggered manually from Actions tab
+      # 7) Terraform Apply (ONLY on push to main = after merge)
       - name: Terraform Apply (dev)
-        if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
-        run: terraform apply -auto-approve -var-file="environments/dev.tfvars"
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve -input=false -var-file="environments/dev.tfvars"
