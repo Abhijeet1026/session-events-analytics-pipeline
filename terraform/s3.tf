@@ -17,7 +17,7 @@ resource "aws_s3_bucket" "lakehouse" {
 # Enable versioning for data protection
 resource "aws_s3_bucket_versioning" "lakehouse" {
   bucket = aws_s3_bucket.lakehouse.id
-  
+
   versioning_configuration {
     status = "Enabled"
   }

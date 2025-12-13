@@ -9,7 +9,7 @@ terraform {
   required_providers {
     aws = {
       # Source location of the AWS provider
-      source  = "hashicorp/aws"
+      source = "hashicorp/aws"
 
       # Accept any AWS provider version in the 5.x series
       version = "~> 5.0"
@@ -28,13 +28,13 @@ provider "aws" {
   default_tags {
     tags = {
       # Group resources under the project name
-      Project     = var.project_name
-      
+      Project = var.project_name
+
       # Specify environment (dev, test, prod, etc.)
       Environment = var.environment
-      
+
       # Helps identify provisioning source
-      ManagedBy   = "Terraform"
+      ManagedBy = "Terraform"
     }
   }
 }
