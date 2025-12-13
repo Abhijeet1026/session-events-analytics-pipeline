@@ -25,11 +25,11 @@ resource "aws_glue_job" "api_to_s3" {
     "--enable-metrics"                   = "true"
 
     # TempDir is commonly required for Spark jobs
-    "--TempDir"                          = "s3://${aws_s3_bucket.lakehouse.bucket}/glue_temp/"
+    "--TempDir" = "s3://${aws_s3_bucket.lakehouse.bucket}/glue_temp/"
 
     # Your script args (getResolvedOptions reads these)
-    "--S3_BUCKET"                        = aws_s3_bucket.lakehouse.bucket
-    "--S3_PREFIX"                        = "raw/session_events"
+    "--S3_BUCKET" = aws_s3_bucket.lakehouse.bucket
+    "--S3_PREFIX" = "raw/session_events"
   }
 
   depends_on = [aws_s3_object.glue_scripts]
