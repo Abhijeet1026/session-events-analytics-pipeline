@@ -1,7 +1,7 @@
 # Upload all Glue scripts from local glue_scripts/ to S3 under glue/scripts/
 
 locals {
-  glue_scripts_dir = "${path.module}/../glue_scripts"
+  glue_scripts_dir = "${path.module}/../glue/scripts"
   glue_scripts     = fileset(local.glue_scripts_dir, "*.py")
 }
 
