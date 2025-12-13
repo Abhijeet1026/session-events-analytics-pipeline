@@ -9,7 +9,7 @@ resource "aws_s3_object" "glue_scripts" {
   for_each = toset(local.glue_scripts)
 
   bucket = aws_s3_bucket.lakehouse.bucket
-  key    = "glue/scripts/${each.value}"
+  key    = "glue_scripts/${each.value}"
   source = "${local.glue_scripts_dir}/${each.value}"
 
   # Re-upload when script content changes
