@@ -14,9 +14,7 @@ resource "aws_s3_bucket" "lakehouse" {
     Name = "${var.project_name}-data-ingestion"
   }
 
-  lifecycle {
-    prevent_destroy = true
-  }
+
 }
 
 # Enable versioning for data protection
