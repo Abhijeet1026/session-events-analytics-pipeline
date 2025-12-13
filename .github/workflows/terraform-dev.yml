@@ -6,12 +6,13 @@ on:
       - main
     paths:
       - "terraform/**"
-
+      - "glue/scripts/**"
   push:
     branches:
       - main
     paths:
       - "terraform/**"
+      - "glue/scripts/**"
 
   workflow_dispatch:
 
