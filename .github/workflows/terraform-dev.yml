@@ -7,6 +7,7 @@ on:
     paths:
       - "terraform/**"
       - "glue/scripts/**"
+
   push:
     branches:
       - main
@@ -16,27 +17,26 @@ on:
 
   workflow_dispatch:
 
+concurrency:
+  group: terraform-dev
+  cancel-in-progress: true
+
 jobs:
   terraform:
     runs-on: ubuntu-latest
-
-    # All commands run from the terraform folder
     defaults:
       run:
         working-directory: terraform
 
     steps:
-      # 1) Checkout repo code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2) Install Terraform
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.9.5
 
-      # 3) Configure AWS credentials (from GitHub Secrets)
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -44,22 +44,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # 4) Terraform Init (use remote backend in backend.tf)
       - name: Terraform Init
         run: terraform init -reconfigure -input=false
 
-      # 5) Terraform Format + Validate
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
 
       - name: Terraform Validate
         run: terraform validate
 
-      # 6) Terraform Plan (runs on PRs + pushes)
       - name: Terraform Plan (dev)
         run: terraform plan -input=false -var-file="environments/dev.tfvars"
 
-      # 7) Terraform Apply (ONLY on push to main = after merge)
       - name: Terraform Apply (dev)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve -input=false -var-file="environments/dev.tfvars"
