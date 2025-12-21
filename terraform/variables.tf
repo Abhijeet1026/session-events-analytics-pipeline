@@ -19,3 +19,13 @@ variable "project_name" {
   type        = string
   description = "Project name used in resource names and tags"
 }
+
+variable "lambda_execution_role_name" {
+  type        = string
+  description = "Existing IAM role name for Lambda execution"
+}
+
+variable "glue_job_name" {
+  type        = string
+  description = "Existing Glue job name to start"
+}
