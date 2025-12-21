@@ -21,8 +21,8 @@ resource "aws_lambda_function" "start_glue" {
   handler = "start_glue_job.lambda_handler"
   runtime = "python3.11"
 
-  timeout      = 30
-  memory_size  = 256
+  timeout     = 30
+  memory_size = 256
 
   environment {
     variables = {
