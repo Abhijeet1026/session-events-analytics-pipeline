@@ -34,7 +34,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ✅ Build the Lambda zip (includes faker dependency)
+      
       # Note: This step must run from repo root, not terraform/
       - name: Build Lambda package (faker)
         working-directory: .
