@@ -63,7 +63,7 @@ def lambda_handler(event, context):
 
         count = int(body.get("count", 1000))
         # Keep it safe for API responses
-        if count < 1 or count > 5000:
+        if count < 1 or count > 500000:
             return {"statusCode": 400, "body": json.dumps({"error": "count must be 1..5000"})}
 
         dt = body.get("dt") or datetime.now(timezone.utc).strftime("%Y-%m-%d")
