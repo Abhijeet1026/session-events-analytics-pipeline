@@ -27,6 +27,8 @@ resource "aws_glue_job" "api_to_s3" {
     "--enable-job-insights"              = "true"
     "--TempDir"                          = "s3://${aws_s3_bucket.lakehouse.bucket}/glue_temp/"
 
+    "--extra-py-files" = "s3://${aws_s3_bucket.lakehouse.bucket}/glue_scripts/ingestion.zip"
+
     # Script args (REQUIRED)
     "--S3_BUCKET" = aws_s3_bucket.lakehouse.bucket
     "--S3_PREFIX" = "raw/session_events"
@@ -37,7 +39,7 @@ resource "aws_glue_job" "api_to_s3" {
     # Tuning (OPTIONAL but recommended)
     "--COUNT"        = "50000"
     "--PLATFORM"     = "web"
-    "--NUM_BATCHES"  = "1"
+    "--NUM_BATCHES"  = "5"
     "--TIMEOUT_SECS" = "30"
     "--MAX_RETRIES"  = "3"
   }
