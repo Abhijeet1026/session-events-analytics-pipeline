@@ -19,8 +19,8 @@ resource "aws_lambda_function" "generate_events" {
   runtime = "python3.11"
   handler = "generate_events.lambda_handler"
 
-  timeout     = 30
-  memory_size = 256
+  timeout     = 900
+  memory_size = 1024
 
   environment {
     variables = {
