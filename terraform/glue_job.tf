@@ -20,16 +20,26 @@ resource "aws_glue_job" "api_to_s3" {
   timeout     = 480
 
   default_arguments = {
+    # Glue runtime
     "--job-language"                     = "python"
     "--enable-continuous-cloudwatch-log" = "true"
     "--enable-metrics"                   = "true"
+    "--enable-job-insights"              = "true"
+    "--TempDir"                          = "s3://${aws_s3_bucket.lakehouse.bucket}/glue_temp/"
 
-    # TempDir is commonly required for Spark jobs
-    "--TempDir" = "s3://${aws_s3_bucket.lakehouse.bucket}/glue_temp/"
-
-    # Your script args (getResolvedOptions reads these)
+    # Script args (REQUIRED)
     "--S3_BUCKET" = aws_s3_bucket.lakehouse.bucket
     "--S3_PREFIX" = "raw/session_events"
+
+    # IMPORTANT: full endpoint including /generate
+    "--API_URL" = "${aws_apigatewayv2_api.events_http_api.api_endpoint}/generate"
+
+    # Tuning (OPTIONAL but recommended)
+    "--COUNT"        = "50000"
+    "--PLATFORM"     = "web"
+    "--NUM_BATCHES"  = "1"
+    "--TIMEOUT_SECS" = "30"
+    "--MAX_RETRIES"  = "3"
   }
 
   depends_on = [aws_s3_object.glue_scripts]
