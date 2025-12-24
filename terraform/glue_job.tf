@@ -37,7 +37,7 @@ resource "aws_glue_job" "api_to_s3" {
     "--API_URL" = "${aws_apigatewayv2_api.events_http_api.api_endpoint}/generate"
 
     # Tuning (OPTIONAL but recommended)
-    "--COUNT"        = "50000"
+    "--COUNT"        = "10000"
     "--PLATFORM"     = "web"
     "--NUM_BATCHES"  = "5"
     "--TIMEOUT_SECS" = "30"
