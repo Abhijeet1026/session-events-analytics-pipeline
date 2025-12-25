@@ -14,7 +14,7 @@ resource "aws_s3_object" "silver_deps_zip" {
 }
 
 resource "aws_glue_job" "silver_transform" {
-  name     = "session-events-silver-transform-dev"
+  name     = "session-events-lakehouse-silver-transform-dev"
   role_arn = data.aws_iam_role.glue_role.arn
 
 
