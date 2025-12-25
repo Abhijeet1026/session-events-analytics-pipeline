@@ -33,10 +33,9 @@ resource "aws_glue_job" "silver_transform" {
     "--RAW_PREFIX"    = "raw/session_events/"
     "--WATERMARK_KEY" = "watermarks/silver_session_events.json"
     "--LOOKBACK_DAYS" = "3"
+    "--ICEBERG_TABLE" = "glue_catalog.lakehouse.silver_session_events"
 
     "--extra-py-files" = "s3://${aws_s3_bucket.lakehouse.bucket}/${aws_s3_object.silver_deps_zip.key}"
-
-
     "--datalake-formats" = "iceberg"
   }
 
