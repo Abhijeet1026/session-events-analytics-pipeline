@@ -167,9 +167,17 @@ def main():
     lookback_days = int(args.get("LOOKBACK_DAYS", "3"))
 
     # ✅ IMPORTANT: default to db.table (NOT glue_catalog.db.table)
-    iceberg_table = args.get("ICEBERG_TABLE", "lakehouse.silver_session_events")
+    iceberg_table = args.get("ICEBERG_TABLE", "glue_catalog.lakehouse.silver_session_events")
 
-    spark = SparkSession.builder.getOrCreate()
+    spark = (
+        SparkSession.builder
+        .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions")
+        .config("spark.sql.catalog.glue_catalog", "org.apache.iceberg.spark.SparkCatalog")
+        .config("spark.sql.catalog.glue_catalog.catalog-impl", "org.apache.iceberg.aws.glue.GlueCatalog")
+        .config("spark.sql.catalog.glue_catalog.warehouse", f"s3://{bucket}/iceberg/")
+        .config("spark.sql.catalog.glue_catalog.io-impl", "org.apache.iceberg.aws.s3.S3FileIO")
+        .getOrCreate()
+    )
 
     # 1) Read watermark
     watermark_ts = read_watermark(bucket=bucket, key=watermark_key)
