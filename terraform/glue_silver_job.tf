@@ -15,7 +15,8 @@ resource "aws_s3_object" "silver_deps_zip" {
 
 resource "aws_glue_job" "silver_transform" {
   name     = "session-events-silver-transform-dev"
-  role_arn = aws_iam_role.glue_job_role.arn
+  role_arn = data.aws_iam_role.glue_role.arn
+
 
   glue_version      = "4.0"
   worker_type       = "G.1X"
