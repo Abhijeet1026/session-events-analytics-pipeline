@@ -8,7 +8,18 @@ from faker import Faker
 
 fake = Faker()
 
-GEO_CHOICES = ["Canada", "US"]
+GEO_CHOICES = [
+    "Alberta",
+    "British Columbia",
+    "Manitoba",
+    "New Brunswick",
+    "Newfoundland and Labrador",
+    "Nova Scotia",
+    "Ontario",
+    "Prince Edward Island",
+    "Quebec",
+    "Saskatchewan"
+]
 EVENT_TYPES = ["clicks", "signups", "log_in", "log_off", "delete_account", "pageview", "referral"]
 PLATFORMS = ["web", "mobile"]
 BROWSERS = ["Chrome", "Safari", "Firefox", "Edge"]
